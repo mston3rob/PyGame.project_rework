@@ -40,12 +40,13 @@ for i in range(1, 10):
 
 
 class Meteor(pygame.sprite.Sprite):
-    def __init__(self, *group, x=None, y=None, vx=None, vy=None):
+    def __init__(self, *group, x=None, y=None, vx=None, vy=None, id=0):
         super().__init__(*group)
         self.image, self.number_of_img = random.choice(list(map(lambda x: (x[0], x[1]), img_of_meteors)))
         self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
                                                          self.image.get_rect().height * 2))
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         # ширина изображения для вычисления максимальной горизонтальной скорости
         w = self.image.get_size()[0] / 2
         # стартовая пзиция
@@ -71,8 +72,20 @@ class Meteor(pygame.sprite.Sprite):
                 self.vx = random.randint(-(((self.rect.left - w) / FPS) // ((height // FPS) // self.vy)),
                                     (((width // FPS) - ((self.rect.right - w) // FPS)) // ((height // FPS) // self.vy)))
         # параметры метеорита
+        self.id = id
         self.damage = 0
 
-    def update(self):
+    def update(self, reg_shells):
         self.rect.x += self.vx
         self.rect.y += self.vy
+
+        if self.damage >= 5:
+            self.kill()
+
+        for i in reg_shells:
+            if pygame.sprite.collide_mask(self, i[0]):
+                i[1] += 1
+                self.damage += 1
+                print(self.damage)
+            if i[1] >= 1:
+                reg_shells.pop(reg_shells.index(i))
