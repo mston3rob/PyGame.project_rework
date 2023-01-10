@@ -33,4 +33,5 @@ class Shells(pygame.sprite.Sprite):
                 i[1] += 1
                 self.kill()
             if i[1] >= 5:
+                # удаляем метеорит после 5 попаданий
                 reg_meteors.pop(reg_meteors.index(i))

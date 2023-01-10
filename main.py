@@ -16,6 +16,7 @@ meteorites = pygame.sprite.Group()
 shells = pygame.sprite.Group()
 FPS = 60
 
+# создание списков для храения объектов 2х классов, для проверки пересечения по маске
 reg_meteors = []
 reg_shells = []
 
@@ -25,7 +26,6 @@ for i in range(1):
 
 if __name__ == '__main__':
     pygame.init()
-    size = width, height = 1200, 840
     screen = pygame.display.set_mode(size)
     running = True
     clock = pygame.time.Clock()
@@ -34,6 +34,7 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
+                # создание снаряда (тест при нажатии)
                 reg_shells.append([Shells(shells, pos=event.pos, velocity=10), 0])
 
         screen.fill(pygame.Color('Black'))

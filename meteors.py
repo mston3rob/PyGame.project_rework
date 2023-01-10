@@ -50,6 +50,7 @@ class Meteor(pygame.sprite.Sprite):
         # ширина изображения для вычисления максимальной горизонтальной скорости
         w = self.image.get_size()[0] / 2
         # стартовая пзиция
+        # проверка на наличие входных данных
         if x != None:
             self.rect.x = x
         else:
@@ -69,10 +70,10 @@ class Meteor(pygame.sprite.Sprite):
             self.vx = vx
         else:
             if self.vy:
+                # придание горизонтальной скорости без вылета за экран
                 self.vx = random.randint(-(((self.rect.left - w) / FPS) // ((height // FPS) // self.vy)),
                                     (((width // FPS) - ((self.rect.right - w) // FPS)) // ((height // FPS) // self.vy)))
         # параметры метеорита
-        self.id = id
         self.damage = 0
 
     def update(self, reg_shells):
@@ -83,9 +84,11 @@ class Meteor(pygame.sprite.Sprite):
             self.kill()
 
         for i in reg_shells:
+            # проверка столкновения со снарядами
             if pygame.sprite.collide_mask(self, i[0]):
                 i[1] += 1
                 self.damage += 1
-                print(self.damage)
+                print(self.damage) # отображение текущего состояния для отладки
             if i[1] >= 1:
+                # удаляем снаряд при столкновении
                 reg_shells.pop(reg_shells.index(i))
