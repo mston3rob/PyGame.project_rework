@@ -35,7 +35,7 @@ def load_image(name, colorkey=None):
 
 
 img_of_meteors = []
-for i in range(1, 10):
+for i in range(1, 3):
         img_of_meteors.append([load_image(f'meteor{i}.png'), i])
 
 
@@ -77,6 +77,10 @@ class Meteor(pygame.sprite.Sprite):
         self.damage = 0
 
     def update(self, reg_shells):
+        self.image = load_image(f'meteor{self.number_of_img}.png')
+        self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
+                                            self.image.get_rect().height * 2))
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect.x += self.vx
         self.rect.y += self.vy
 
@@ -88,6 +92,10 @@ class Meteor(pygame.sprite.Sprite):
             if pygame.sprite.collide_mask(self, i[0]):
                 i[1] += 1
                 self.damage += 1
+                self.image = load_image(f'meteor{self.number_of_img}blink.png')
+                self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
+                                                                 self.image.get_rect().height * 2))
+                self.mask = pygame.mask.from_surface(self.image)
                 print(self.damage) # отображение текущего состояния для отладки
             if i[1] >= 1:
                 # удаляем снаряд при столкновении
