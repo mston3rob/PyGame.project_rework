@@ -45,6 +45,7 @@ if __name__ == '__main__':
         if pygame.mouse.get_focused() and cursor_pos:
             player.update(cursor_pos[0])
         player.draw(screen)
+        player.hearts()
         shells.draw(screen)
         shells.update(reg_meteors)
         meteorites.draw(screen)

@@ -31,16 +31,18 @@ def load_image(name, colorkey=None):
     return image
 
 PLAYER = load_image('player.png', -1)
+HEART_POINT = load_image('heart_point.png', -1)
 
 class Player:
     def __init__(self):
         self.player_image = PLAYER
+        self.hp_image = HEART_POINT
         self.rect = self.player_image.get_rect()
         self.rect.x, self.rect.y = 580, 600
         self.mask = pygame.mask.from_surface(self.player_image)
         self.shooting = False
         self.what_gun = False
-        self.player_hp = 1
+        self.player_hp = 3
 
     def update(self, cursor_pos_x=580):
         self.rect.x = cursor_pos_x
@@ -57,4 +59,8 @@ class Player:
         self.player_hp -= 1
         if self.player_hp == 0:
             print('You Lose')
+
+    def hearts(self):
+        for i in range(self.player_hp):
+            screen.blit(self.hp_image, (1000 + i * 36, 40))
 
