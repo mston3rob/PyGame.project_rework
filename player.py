@@ -32,17 +32,29 @@ def load_image(name, colorkey=None):
 
 PLAYER = load_image('player.png', -1)
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self, *group):
-        super().__init__(group)
-        self.pos = (600, 580)
+class Player:
+    def __init__(self):
         self.player_image = PLAYER
         self.rect = self.player_image.get_rect()
+        self.rect.x, self.rect.y = 580, 600
         self.mask = pygame.mask.from_surface(self.player_image)
         self.shooting = False
+        self.what_gun = False
+        self.player_hp = 1
 
-    def update_pos_player(self, pos, screen):
-        pass
+    def update(self, cursor_pos_x=580):
+        self.rect.x = cursor_pos_x
 
-    def update_player_shooting(self, pos, shooting):
-        pass
+    def get_pos(self):
+        x_from_gun = self.rect.x - 20 if self.what_gun else self.rect.x + 20
+        self.what_gun = False if self.what_gun else True
+        return (x_from_gun, self.rect.y)
+
+    def draw(self, screen):
+        return screen.blit(PLAYER, (self.rect.x - 44, self.rect.y))
+
+    def hurt(self):
+        self.player_hp -= 1
+        if self.player_hp == 0:
+            print('You Lose')
+

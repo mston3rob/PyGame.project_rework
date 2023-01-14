@@ -76,7 +76,7 @@ class Meteor(pygame.sprite.Sprite):
         # параметры метеорита
         self.damage = 0
 
-    def update(self, reg_shells):
+    def update(self, reg_shells, player):
         self.rect.x += self.vx
         self.rect.y += self.vy
 
@@ -92,3 +92,7 @@ class Meteor(pygame.sprite.Sprite):
             if i[1] >= 1:
                 # удаляем снаряд при столкновении
                 reg_shells.pop(reg_shells.index(i))
+
+        if pygame.sprite.collide_mask(self, player):
+            self.kill()
+            player.hurt()
