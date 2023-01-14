@@ -2,6 +2,7 @@ import pygame
 import os
 import sys
 import random
+from Particles import Particle
 
 # инициалитзация pygame для работы со спрайтами и загрузкой изображения
 pygame.init()
@@ -32,6 +33,19 @@ def load_image(name, colorkey=None):
     else:
         image = image.convert_alpha()
     return image
+
+
+# функция для проверки столкновения с элементами той же группы, исключая проверяемого
+def check_collision(s1, s2):
+    if s1 != s2:
+        return pygame.sprite.collide_mask(s1, s2)
+    return False
+
+def create_particles(particles, position):
+    particle_count = 20
+    numbers = range(-5, 6)
+    for _ in range(particle_count):
+        Particle(particles, position, random.choice(numbers), random.choice(numbers))
 
 
 img_of_meteors = []
@@ -76,7 +90,7 @@ class Meteor(pygame.sprite.Sprite):
         # параметры метеорита
         self.damage = 0
 
-    def update(self, reg_shells):
+    def update(self, reg_shells, reg_meteors, particles):
         self.image = load_image(f'meteor{self.number_of_img}.png')
         self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
                                             self.image.get_rect().height * 2))
@@ -100,3 +114,9 @@ class Meteor(pygame.sprite.Sprite):
             if i[1] >= 1:
                 # удаляем снаряд при столкновении
                 reg_shells.pop(reg_shells.index(i))
+
+        for i in reg_meteors:
+            if self != i[0]:
+                if pygame.sprite.collide_mask(self, i[0]):
+                    self.damage = 5
+                    create_particles(particles, (self.rect.x, self.rect.y))

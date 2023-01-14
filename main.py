@@ -12,7 +12,7 @@ size = width, height = 1200, 840
 screen = pygame.display.set_mode(size)
 # инициализация спрайтов метеоритов
 meteorites = pygame.sprite.Group()
-# список из изображений метеоритов (длинна=9)
+particles = pygame.sprite.Group()
 shells = pygame.sprite.Group()
 FPS = 60
 
@@ -20,8 +20,9 @@ FPS = 60
 reg_meteors = []
 reg_shells = []
 
-for i in range(1):
-    reg_meteors.append([Meteor(meteorites,vy=1, id=i), 0])
+
+reg_meteors.append([Meteor(meteorites,vy=1, x=0, vx=1, id=0), 0])
+reg_meteors.append([Meteor(meteorites,vy=1, x=500, vx=-1, id=1), 0])
 
 
 if __name__ == '__main__':
@@ -41,7 +42,9 @@ if __name__ == '__main__':
         shells.draw(screen)
         shells.update(reg_meteors)
         meteorites.draw(screen)
-        meteorites.update(reg_shells)
+        meteorites.update(reg_shells, reg_meteors, particles)
+        particles.draw(screen)
+        particles.update()
         clock.tick(FPS)
         pygame.display.flip()
     pygame.quit()
