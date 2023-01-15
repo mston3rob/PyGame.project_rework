@@ -41,11 +41,16 @@ def check_collision(s1, s2):
         return pygame.sprite.collide_mask(s1, s2)
     return False
 
-def create_particles(particles, position):
+def create_particles(particles, position, vx, vy):
     particle_count = 20
-    numbers = range(-5, 6)
+    if vx > 0:
+        x = range(-1, 5)
+    elif vx < 0:
+        x = range(-5, 1)
+    else:
+        x = range(-1, 1)
     for _ in range(particle_count):
-        Particle(particles, position, random.choice(numbers), random.choice(numbers))
+        Particle(particles, position, random.choice(x), random.choice(x))
 
 
 img_of_meteors = []
@@ -119,4 +124,4 @@ class Meteor(pygame.sprite.Sprite):
             if self != i[0]:
                 if pygame.sprite.collide_mask(self, i[0]):
                     self.damage = 5
-                    create_particles(particles, (self.rect.x, self.rect.y))
+                    create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
