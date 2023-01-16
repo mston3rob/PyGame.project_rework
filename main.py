@@ -24,7 +24,7 @@ reg_shells = []
 reg_meteors.append([Meteor(meteorites,vy=1, x=0, vx=1, id=0), 0])
 reg_meteors.append([Meteor(meteorites,vy=1, x=500, vx=-1, id=1), 0])
 
-
+print(reg_meteors)
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(size)

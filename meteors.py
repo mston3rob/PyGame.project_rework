@@ -105,6 +105,11 @@ class Meteor(pygame.sprite.Sprite):
 
         if self.damage >= 5:
             self.kill()
+            for i in reg_meteors:
+                if i[1] >= 5:
+                    reg_meteors.pop(reg_meteors.index(i))
+            print('obj killed')
+            print(reg_meteors)
 
         for i in reg_shells:
             # проверка столкновения со снарядами
@@ -123,5 +128,6 @@ class Meteor(pygame.sprite.Sprite):
         for i in reg_meteors:
             if self != i[0]:
                 if pygame.sprite.collide_mask(self, i[0]):
-                    self.damage = 5
                     create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
+                    self.damage = 5
+                    i[1] = 5
