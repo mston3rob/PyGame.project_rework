@@ -16,8 +16,9 @@ meteorites = pygame.sprite.Group()
 particles = pygame.sprite.Group()
 shells = pygame.sprite.Group()
 FPS = 60
+fire_rate = 200
 
-spawn_zones = []
+SHOT_TIMING = pygame.USEREVENT + 1
 # создание списков для храения объектов 2х классов, для проверки пересечения по маске
 reg_meteors = []
 reg_shells = []
@@ -32,9 +33,11 @@ if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(size)
     running = True
+    shooting = False
     clock = pygame.time.Clock()
     cursor_pos = None
     player = Player()
+    pygame.time.set_timer(SHOT_TIMING, fire_rate)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -43,6 +46,10 @@ if __name__ == '__main__':
                  cursor_pos = event.pos
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # создание снаряда (тест при нажатии)
+                shooting = True
+            if event.type == pygame.MOUSEBUTTONUP:
+                shooting = False
+            if event.type == SHOT_TIMING and shooting:
                 reg_shells.append([Shells(shells, pos=(player.get_pos()), velocity=10), 0])
         screen.fill(pygame.Color('Black'))
         if pygame.mouse.get_focused() and cursor_pos:
