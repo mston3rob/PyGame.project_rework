@@ -35,12 +35,6 @@ def load_image(name, colorkey=None):
     return image
 
 
-# функция для проверки столкновения с элементами той же группы, исключая проверяемого
-def check_collision(s1, s2):
-    if s1 != s2:
-        return pygame.sprite.collide_mask(s1, s2)
-    return False
-
 def create_particles(particles, position, vx, vy, count=20):
     particle_count = 20
     if vx > 0:
@@ -54,8 +48,8 @@ def create_particles(particles, position, vx, vy, count=20):
 
 
 img_of_meteors = []
-for i in range(1, 10):
-        img_of_meteors.append([load_image(f'meteor{i}.png'), i])
+for i in range(1, 3):
+    img_of_meteors.append([load_image(f'meteor{i}.png'), i])
 
 
 class Meteor(pygame.sprite.Sprite):
@@ -124,12 +118,19 @@ class Meteor(pygame.sprite.Sprite):
                 reg_shells.pop(reg_shells.index(i))
 
         for i in reg_meteors:
-            if self != i[0]:
+            if self != i[0] and self.rect.y >= 100:
                 if pygame.sprite.collide_mask(self, i[0]):
                     create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
                     self.damage = 5
                     i[1] = 5
 
         if pygame.sprite.collide_mask(self, player):
-            self.kill()
+            for i in reg_meteors:
+                if i[0] == self:
+                    self.damage = 5
+                    reg_meteors.pop(reg_meteors.index(i))
+                    self.kill()
             player.hurt()
+
+        if self.rect.x > 1000:
+            self.kill()

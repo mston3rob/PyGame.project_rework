@@ -17,15 +17,16 @@ particles = pygame.sprite.Group()
 shells = pygame.sprite.Group()
 FPS = 60
 
+spawn_zones = []
 # создание списков для храения объектов 2х классов, для проверки пересечения по маске
 reg_meteors = []
 reg_shells = []
 
-for i in range(1):
-    reg_meteors.append([Meteor(meteorites,vy=1, id=i), 0])
+for i in range(5):
+    reg_meteors.append([Meteor(meteorites, id=i), 0])
 
-reg_meteors.append([Meteor(meteorites,vy=1, x=0, vx=1, id=0), 0])
-reg_meteors.append([Meteor(meteorites,vy=1, x=500, vx=-1, id=1), 0])
+#reg_meteors.append([Meteor(meteorites,vy=1, x=0, vx=1, id=4), 0])
+#reg_meteors.append([Meteor(meteorites,vy=1, x=500, vx=-1, id=5), 0])
 
 if __name__ == '__main__':
     pygame.init()
@@ -51,7 +52,7 @@ if __name__ == '__main__':
         shells.draw(screen)
         shells.update(reg_meteors)
         meteorites.draw(screen)
-        meteorites.update(reg_shells, reg_meteors, particles)
+        meteorites.update(reg_shells, reg_meteors, particles, player)
         particles.draw(screen)
         particles.update()
         clock.tick(FPS)

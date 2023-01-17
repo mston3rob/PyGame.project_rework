@@ -63,4 +63,3 @@ class Player:
     def hearts(self):
         for i in range(self.player_hp):
             screen.blit(self.hp_image, (1000 + i * 36, 40))
-
