@@ -38,7 +38,7 @@ class Player:
         self.player_image = PLAYER
         self.hp_image = HEART_POINT
         self.rect = self.player_image.get_rect()
-        self.rect.x, self.rect.y = 580, 600
+        self.rect.x, self.rect.y = 580, 700
         self.mask = pygame.mask.from_surface(self.player_image)
         self.shooting = False
         self.what_gun = False
