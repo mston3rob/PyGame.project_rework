@@ -130,7 +130,7 @@ class Meteor(pygame.sprite.Sprite):
                     self.damage = 5
                     reg_meteors.pop(reg_meteors.index(i))
                     self.kill()
-            player.hurt()
+                    player.hurt()
 
-        if self.rect.x > 1000:
+        if self.rect.y > 1000:
             self.kill()
