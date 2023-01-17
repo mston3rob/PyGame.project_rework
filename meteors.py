@@ -41,7 +41,7 @@ def check_collision(s1, s2):
         return pygame.sprite.collide_mask(s1, s2)
     return False
 
-def create_particles(particles, position, vx, vy):
+def create_particles(particles, position, vx, vy, count=20):
     particle_count = 20
     if vx > 0:
         x = range(-1, 5)
@@ -104,12 +104,11 @@ class Meteor(pygame.sprite.Sprite):
         self.rect.y += self.vy
 
         if self.damage >= 5:
+            create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
             self.kill()
             for i in reg_meteors:
                 if i[1] >= 5:
                     reg_meteors.pop(reg_meteors.index(i))
-            print('obj killed')
-            print(reg_meteors)
 
         for i in reg_shells:
             # проверка столкновения со снарядами
@@ -120,7 +119,6 @@ class Meteor(pygame.sprite.Sprite):
                 self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
                                                                  self.image.get_rect().height * 2))
                 self.mask = pygame.mask.from_surface(self.image)
-                print(self.damage) # отображение текущего состояния для отладки
             if i[1] >= 1:
                 # удаляем снаряд при столкновении
                 reg_shells.pop(reg_shells.index(i))
