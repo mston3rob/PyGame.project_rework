@@ -54,7 +54,7 @@ def create_particles(particles, position, vx, vy, count=20):
 
 
 img_of_meteors = []
-for i in range(1, 3):
+for i in range(1, 10):
         img_of_meteors.append([load_image(f'meteor{i}.png'), i])
 
 
@@ -95,7 +95,7 @@ class Meteor(pygame.sprite.Sprite):
         # параметры метеорита
         self.damage = 0
 
-    def update(self, reg_shells, reg_meteors, particles):
+    def update(self, reg_shells, reg_meteors, particles, player):
         self.image = load_image(f'meteor{self.number_of_img}.png')
         self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
                                             self.image.get_rect().height * 2))
@@ -129,3 +129,7 @@ class Meteor(pygame.sprite.Sprite):
                     create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
                     self.damage = 5
                     i[1] = 5
+
+        if pygame.sprite.collide_mask(self, player):
+            self.kill()
+            player.hurt()

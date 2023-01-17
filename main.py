@@ -4,6 +4,7 @@ import sys
 import random
 from meteors import Meteor
 from shells import Shells
+from player import Player
 
 # инициалитзация pygame для работы со спрайтами и загрузкой изображения
 pygame.init()
@@ -20,25 +21,33 @@ FPS = 60
 reg_meteors = []
 reg_shells = []
 
+for i in range(1):
+    reg_meteors.append([Meteor(meteorites,vy=1, id=i), 0])
 
 reg_meteors.append([Meteor(meteorites,vy=1, x=0, vx=1, id=0), 0])
 reg_meteors.append([Meteor(meteorites,vy=1, x=500, vx=-1, id=1), 0])
 
-print(reg_meteors)
 if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode(size)
     running = True
     clock = pygame.time.Clock()
+    cursor_pos = None
+    player = Player()
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEMOTION:
+                 cursor_pos = event.pos
             if event.type == pygame.MOUSEBUTTONDOWN:
                 # создание снаряда (тест при нажатии)
-                reg_shells.append([Shells(shells, pos=event.pos, velocity=10), 0])
-
+                reg_shells.append([Shells(shells, pos=(player.get_pos()), velocity=10), 0])
         screen.fill(pygame.Color('Black'))
+        if pygame.mouse.get_focused() and cursor_pos:
+            player.update(cursor_pos[0])
+        player.draw(screen)
+        player.hearts()
         shells.draw(screen)
         shells.update(reg_meteors)
         meteorites.draw(screen)
