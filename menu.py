@@ -54,15 +54,20 @@ class Menu:
                     pygame.quit()
                     sys.exit()
                 if event.type == pygame.KEYDOWN:
-                    if event.key == 105:
+                    if event.key == pygame.K_ESCAPE:
                         self.menu_ok = False
                 if event.type == pygame.MOUSEMOTION:
                     cursor_pos = event.pos
                 if pygame.mouse.get_focused() and cursor_pos:
                     if 470 <= cursor_pos[0] <= 610:
-                        if 270 <= cursor_pos[1] <= 350:
-                            if event.type == pygame.MOUSEBUTTONDOWN:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            if 270 <= cursor_pos[1] <= 350:
                                 self.menu_ok = False
+                            if 370 <= cursor_pos[1] <= 450:
+                                print('Ещё не реализованно')
+                            if 470 <= cursor_pos[1] <= 550:
+                                print('Так же не реализованна')
+
 
             screen.blit(self.surf, (self.width // 4, 0))
             self.draw_but1()
