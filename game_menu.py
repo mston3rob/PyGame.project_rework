@@ -1,6 +1,6 @@
 import pygame
 import sys
-
+from win_or_lose import Player_End
 
 pygame.init()
 clock = pygame.time.Clock()
@@ -34,6 +34,10 @@ class Game_Menu:
         text = font.render("Выйти", True, pygame.Color('black'))
         self.surf.blit(text, (220, 500))
 
+    def get_scores(self):
+        Player_End.info()
+
+
     def go__game_menu(self, screen):
         cursor_pos = None
         while self.menu_ok:
@@ -58,3 +62,4 @@ class Game_Menu:
             self.draw_but3()
             pygame.display.flip()
             clock.tick(self.FPS)
+

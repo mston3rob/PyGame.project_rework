@@ -2,7 +2,7 @@ import pygame
 import os
 import sys
 from Animation import AnimatedSprite
-
+from win_or_lose import Player_End
 
 # инициалитзация pygame для работы со спрайтами и загрузкой изображения
 pygame.init()
@@ -68,6 +68,8 @@ class Player:
                 explosion_sprites.draw(screen)
                 pygame.time.wait(50)
                 pygame.display.flip()
+            pl = Player_End()
+
 
     def hearts(self):
         for i in range(self.player_hp):
