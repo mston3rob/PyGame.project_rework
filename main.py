@@ -39,7 +39,7 @@ def game():
         screen = pygame.display.set_mode(size)
         running, shooting, stop = True, False, False
         cursor_pos = None
-        to_g_menu = False
+        to_g_menu = 2
         player = Player()
         menu = Menu(WIDTH, HEIGHT)
         pygame.time.set_timer(SHOT_TIMING, fire_rate)
@@ -75,12 +75,15 @@ def game():
                 particles.draw(screen)
                 particles.update()
                 player.hearts()
+                menu.draw_but_to_menu(screen)
                 clock.tick(FPS)
             pygame.display.flip()
-        if to_g_menu:
+        if to_g_menu == 0:
             game_menu()
-        else:
+        elif to_g_menu == 1:
             game()
+        else:
+            pygame.quit()
 
 
 def terminate():

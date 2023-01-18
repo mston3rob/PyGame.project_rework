@@ -44,6 +44,12 @@ class Menu:
         text = font.render("Выйти", True, pygame.Color('black'))
         self.surf.blit(text, (245, 500))
 
+    def draw_but_to_menu(self, screen):
+        pygame.draw.rect(screen, (190, 80, 190), ((0, 0), self.wh_but))
+        font = pygame.font.Font(None, 40)
+        text = font.render("Выйти", True, pygame.Color('white'))
+        screen.blit(text, (20, 20))
+
 
 
     def go_menu(self, screen):
@@ -56,6 +62,7 @@ class Menu:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         self.menu_ok = False
+                        return 2, True
                 if event.type == pygame.MOUSEMOTION:
                     cursor_pos = event.pos
                 if pygame.mouse.get_focused() and cursor_pos:
@@ -63,11 +70,11 @@ class Menu:
                         if 470 <= cursor_pos[0] <= 710:
                             if 270 <= cursor_pos[1] <= 350:
                                 self.menu_ok = False
-                                return False, True
+                                return 2, True
                             elif 370 <= cursor_pos[1] <= 450:
-                                return False, False
+                                return 1, False
                             elif 470 <= cursor_pos[1] <= 550:
-                                return True, False
+                                return 0, False
 
             screen.blit(self.surf, (self.width // 4, 0))
             self.draw_but1()
