@@ -60,6 +60,10 @@ def game():
                         shooting = False
                     if event.type == SHOT_TIMING and shooting:
                         reg_shells.append([Shells(shells, pos=(player.get_pos()), velocity=10), 0])
+                    if pygame.mouse.get_focused() and cursor_pos:
+                        if 0 <= cursor_pos[0] <= 130 and 0 <= cursor_pos[1] <= 70:
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                stop = True
             if stop:
                 to_g_menu, running = menu.go_menu(screen)
                 menu.menu_ok, stop= True, False
@@ -138,7 +142,6 @@ def start_screen():
         intro_rect.x = 10
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
-
     while load:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -150,5 +153,4 @@ def start_screen():
         if load:
             pygame.display.flip()
             clock.tick(FPS)
-
 start_screen()

@@ -45,7 +45,10 @@ class Menu:
         self.surf.blit(text, (245, 500))
 
     def draw_but_to_menu(self, screen):
-        pygame.draw.rect(screen, (190, 80, 190), ((0, 0), self.wh_but))
+        cor_top = (0, 0)
+        cor_wh = (130, 70)
+        pygame.draw.rect(screen, (190, 80, 190), (cor_top, cor_wh))
+        pygame.draw.rect(screen, (90, 40, 90), (cor_top, cor_wh), 3)
         font = pygame.font.Font(None, 40)
         text = font.render("Выйти", True, pygame.Color('white'))
         screen.blit(text, (20, 20))
