@@ -13,64 +13,58 @@ meteorites = pygame.sprite.Group()
 # список из изображений метеоритов (длинна=9)
 shells = pygame.sprite.Group()
 FPS = 60
+clock = pygame.time.Clock()
 
 
-class Menu:
+class Game_Menu:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.surf = pygame.Surface((width // 2, height))
+        self.surf = pygame.Surface((width // 3, height))
         self.surf.fill((200, 200, 200, 30))
         self.menu_ok = True
         self.wh_but = 240, 80
         self.but_up = (181, 181, 181)
 
-
     def draw_but1(self):
-        pygame.draw.rect(self.surf, self.but_up, ((170, 270), self.wh_but))
+        pygame.draw.rect(self.surf, self.but_up, ((140, 270), self.wh_but))
         font = pygame.font.Font(None, 40)
-        text = font.render("Продолжить", True, pygame.Color('black'))
+        text = font.render("Начать игру", True, pygame.Color('black'))
         self.surf.blit(text, (200, 300))
 
     def draw_but2(self):
-        pygame.draw.rect(self.surf, self.but_up, ((170, 370), self.wh_but))
+        pygame.draw.rect(self.surf, self.but_up, ((140, 370), self.wh_but))
         font = pygame.font.Font(None, 40)
-        text = font.render("Заново", True, pygame.Color('black'))
-        self.surf.blit(text, (240, 400))
+        text = font.render("Обучение", True, pygame.Color('black'))
+        self.surf.blit(text, (210, 400))
 
     def draw_but3(self):
-        pygame.draw.rect(self.surf, self.but_up, ((170, 470), self.wh_but))
+        pygame.draw.rect(self.surf, self.but_up, ((140, 470), self.wh_but))
         font = pygame.font.Font(None, 40)
         text = font.render("Выйти", True, pygame.Color('black'))
-        self.surf.blit(text, (245, 500))
+        self.surf.blit(text, (220, 500))
 
-
-
-    def go_menu(self, screen):
+    def go__game_menu(self, screen):
         cursor_pos = None
         while self.menu_ok:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.menu_ok = False
                 if event.type == pygame.MOUSEMOTION:
                     cursor_pos = event.pos
                 if pygame.mouse.get_focused() and cursor_pos:
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        if 470 <= cursor_pos[0] <= 710:
+                        if 940 <= cursor_pos[0] <= 1080:
                             if 270 <= cursor_pos[1] <= 350:
-                                self.menu_ok = False
-                                return False, True
+                                return 0
                             elif 370 <= cursor_pos[1] <= 450:
-                                return False, False
+                                return 1
                             elif 470 <= cursor_pos[1] <= 550:
-                                return True, False
-
-            screen.blit(self.surf, (self.width // 4, 0))
+                                return 2
+            screen.blit(self.surf, (self.width // 3 * 2, 0))
             self.draw_but1()
             self.draw_but2()
             self.draw_but3()
             pygame.display.flip()
+            clock.tick(FPS)
