@@ -105,7 +105,7 @@ class Meteor(pygame.sprite.Sprite):
             # проверка столкновения со снарядами
             if pygame.sprite.collide_mask(self, i):
                 self.damage += 1
-                print(self.damage)
+                player.pl_score += 10
                 self.image = load_image(f'meteor{self.number_of_img}blink.png')
                 self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
                                                                  self.image.get_rect().height * 2))

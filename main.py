@@ -20,7 +20,7 @@ shells = pygame.sprite.Group()
 FPS = 60
 fire_rate = 200
 clock = pygame.time.Clock()
-g_m = Game_Menu(WIDTH, HEIGHT)
+g_m = Game_Menu(WIDTH, HEIGHT, FPS)
 
 
 def game():
@@ -41,7 +41,7 @@ def game():
         cursor_pos = None
         to_g_menu = 2
         player = Player()
-        menu = Menu(WIDTH, HEIGHT)
+        menu = Menu(WIDTH, HEIGHT, FPS)
         pygame.time.set_timer(SHOT_TIMING, fire_rate)
         while running:
             for event in pygame.event.get():

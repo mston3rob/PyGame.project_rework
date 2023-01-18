@@ -1,6 +1,7 @@
 import pygame
 import os
 import sys
+from Animation import AnimatedSprite
 
 
 # инициалитзация pygame для работы со спрайтами и загрузкой изображения
@@ -43,6 +44,7 @@ class Player:
         self.shooting = False
         self.what_gun = False
         self.player_hp = 3
+        self.pl_score = 0
 
     def update(self, cursor_pos_x=580):
         self.rect.x = cursor_pos_x
@@ -58,7 +60,14 @@ class Player:
     def hurt(self):
         self.player_hp -= 1
         if self.player_hp == 0:
-            print('You Lose')
+            explosion_sprites = pygame.sprite.Group()
+            explosion = AnimatedSprite(load_image("exps.png", -1), 4, 4, self.rect.x - 70, self.rect.y - 40,
+                                       explosion_sprites)
+            for _ in range(16):
+                explosion_sprites.update()
+                explosion_sprites.draw(screen)
+                pygame.time.wait(50)
+                pygame.display.flip()
 
     def hearts(self):
         for i in range(self.player_hp):

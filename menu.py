@@ -1,22 +1,13 @@
 import pygame
-import os
 import sys
-import random
 
-# инициалитзация pygame для работы со спрайтами и загрузкой изображения
+
 pygame.init()
-size = width, height = 1200, 840
-# ширина экрана должна быть кратна фреймрету (FPS)
-screen = pygame.display.set_mode(size)
-# инициализация спрайтов метеоритов
-meteorites = pygame.sprite.Group()
-# список из изображений метеоритов (длинна=9)
-shells = pygame.sprite.Group()
-FPS = 60
+clock = pygame.time.Clock()
 
 
 class Menu:
-    def __init__(self, width, height):
+    def __init__(self, width, height, FPS):
         self.width = width
         self.height = height
         self.surf = pygame.Surface((width // 2, height))
@@ -24,6 +15,8 @@ class Menu:
         self.menu_ok = True
         self.wh_but = 240, 80
         self.but_up = (181, 181, 181)
+        self.FPS = FPS
+
 
 
     def draw_but1(self):
@@ -87,3 +80,4 @@ class Menu:
             self.draw_but2()
             self.draw_but3()
             pygame.display.flip()
+            clock.tick(self.FPS)
