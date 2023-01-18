@@ -30,7 +30,7 @@ def game():
     reg_shells = []
 
     for i in range(5):
-        reg_meteors.append([Meteor(meteorites, id=i), 0])
+        Meteor(meteorites, id=i)
 
     #reg_meteors.append([Meteor(meteorites,vy=1, x=0, vx=1, id=4), 0])
     #reg_meteors.append([Meteor(meteorites,vy=1, x=500, vx=-1, id=5), 0])
@@ -65,6 +65,13 @@ def game():
                             if event.type == pygame.MOUSEBUTTONDOWN:
                                 stop = True
             if stop:
+                for i in meteorites:
+                    i.kill()
+                for i in shells:
+                    i.kill
+                for i in particles:
+                    i.kill()
+
                 to_g_menu, running = menu.go_menu(screen)
                 menu.menu_ok, stop= True, False
             else:
@@ -73,9 +80,9 @@ def game():
                     player.update(cursor_pos[0])
                 player.draw(screen)
                 shells.draw(screen)
-                shells.update(reg_meteors)
+                shells.update(meteorites)
                 meteorites.draw(screen)
-                meteorites.update(reg_shells, reg_meteors, particles, player)
+                meteorites.update(shells, meteorites, particles, player)
                 particles.draw(screen)
                 particles.update()
                 player.hearts()

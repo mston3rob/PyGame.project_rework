@@ -100,35 +100,28 @@ class Meteor(pygame.sprite.Sprite):
         if self.damage >= 5:
             create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
             self.kill()
-            for i in reg_meteors:
-                if i[1] >= 5:
-                    reg_meteors.pop(reg_meteors.index(i))
 
         for i in reg_shells:
             # проверка столкновения со снарядами
-            if pygame.sprite.collide_mask(self, i[0]):
-                i[1] += 1
+            if pygame.sprite.collide_mask(self, i):
                 self.damage += 1
+                print(self.damage)
                 self.image = load_image(f'meteor{self.number_of_img}blink.png')
                 self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
                                                                  self.image.get_rect().height * 2))
                 self.mask = pygame.mask.from_surface(self.image)
-            if i[1] >= 1:
-                # удаляем снаряд при столкновении
-                reg_shells.pop(reg_shells.index(i))
+                i.terminate()
 
         for i in reg_meteors:
-            if self != i[0] and self.rect.y >= 100:
-                if pygame.sprite.collide_mask(self, i[0]):
+            if self != i and self.rect.y >= 100:
+                if pygame.sprite.collide_mask(self, i):
                     create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
                     self.damage = 5
-                    i[1] = 5
 
         if pygame.sprite.collide_mask(self, player):
             for i in reg_meteors:
-                if i[0] == self:
+                if i == self:
                     self.damage = 5
-                    reg_meteors.pop(reg_meteors.index(i))
                     self.kill()
                     player.hurt()
 

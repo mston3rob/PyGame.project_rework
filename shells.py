@@ -25,13 +25,10 @@ class Shells(pygame.sprite.Sprite):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
         self.vy = velocity
+        self.damage = 0
 
     def update(self, reg_meteors):
         self.rect.y -= self.vy
-        for i in reg_meteors:
-            if pygame.sprite.collide_mask(self, i[0]):
-                i[1] += 1
-                self.kill()
-            if i[1] >= 5:
-                # удаляем метеорит после 5 попаданий
-                reg_meteors.pop(reg_meteors.index(i))
+
+    def terminate(self):
+        self.kill()
