@@ -78,6 +78,9 @@ class Menu:
                                 return 1, False
                             elif 470 <= cursor_pos[1] <= 550:
                                 return 0, False
+                        if 0 <= cursor_pos[0] <= 130 and 0 <= cursor_pos[1] <= 70:
+                            self.menu_ok = False
+                            return 2, True
 
             screen.blit(self.surf, (self.width // 4, 0))
             self.draw_but1()

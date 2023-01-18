@@ -65,15 +65,8 @@ def game():
                             if event.type == pygame.MOUSEBUTTONDOWN:
                                 stop = True
             if stop:
-                for i in meteorites:
-                    i.kill()
-                for i in shells:
-                    i.kill
-                for i in particles:
-                    i.kill()
-
                 to_g_menu, running = menu.go_menu(screen)
-                menu.menu_ok, stop= True, False
+                menu.menu_ok, stop = True, False
             else:
                 screen.fill(pygame.Color('Black'))
                 if pygame.mouse.get_focused() and cursor_pos:
@@ -89,10 +82,17 @@ def game():
                 menu.draw_but_to_menu(screen)
                 clock.tick(FPS)
             pygame.display.flip()
-        if to_g_menu == 0:
-            game_menu()
-        elif to_g_menu == 1:
-            game()
+        if to_g_menu == 0 or to_g_menu == 1:
+            for i in meteorites:
+                i.kill()
+            for i in shells:
+                i.kill()
+            for i in particles:
+                i.kill()
+            if to_g_menu == 0:
+                game_menu()
+            else:
+                game()
         else:
             pygame.quit()
 
