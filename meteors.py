@@ -53,7 +53,7 @@ for i in range(1, 3):
 
 
 class Meteor(pygame.sprite.Sprite):
-    def __init__(self, *group, x=None, y=None, vx=None, vy=None, id=0):
+    def __init__(self, *group, x=None, y=None, vx=None, vy=None):
         super().__init__(*group)
         self.image, self.number_of_img = random.choice(list(map(lambda x: (x[0], x[1]), img_of_meteors)))
         self.image = pygame.transform.scale(self.image, (self.image.get_rect().width * 2,
@@ -122,6 +122,7 @@ class Meteor(pygame.sprite.Sprite):
             for i in reg_meteors:
                 if i == self:
                     self.damage = 5
+                    create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
                     self.kill()
                     player.hurt()
 

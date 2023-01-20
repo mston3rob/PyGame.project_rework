@@ -18,22 +18,19 @@ meteorites = pygame.sprite.Group()
 particles = pygame.sprite.Group()
 shells = pygame.sprite.Group()
 FPS = 60
-fire_rate = 200
 clock = pygame.time.Clock()
 g_m = Game_Menu(WIDTH, HEIGHT, FPS)
 
 
 def game():
     SHOT_TIMING = pygame.USEREVENT + 1
-    # создание списков для храения объектов 2х классов, для проверки пересечения по маске
-    reg_meteors = []
-    reg_shells = []
+    CHANGE_DIFFICULT = pygame.USEREVENT + 2
+    difficult = 1
+    diff_was_changed = False
+    fire_rate = 200
+    shells_velocity = 10
+    score = 0
 
-    for i in range(5):
-        Meteor(meteorites, id=i)
-
-    #reg_meteors.append([Meteor(meteorites,vy=1, x=0, vx=1, id=4), 0])
-    #reg_meteors.append([Meteor(meteorites,vy=1, x=500, vx=-1, id=5), 0])
 
     if __name__ == '__main__':
         screen = pygame.display.set_mode(size)
@@ -42,7 +39,9 @@ def game():
         to_g_menu = 2
         player = Player()
         menu = Menu(WIDTH, HEIGHT, FPS)
+        pygame.time.set_timer(CHANGE_DIFFICULT, 20000)
         pygame.time.set_timer(SHOT_TIMING, fire_rate)
+
         while running:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
@@ -54,20 +53,78 @@ def game():
                     if event.type == pygame.MOUSEMOTION:
                         cursor_pos = event.pos
                     if event.type == pygame.MOUSEBUTTONDOWN:
-                        # создание снаряда (тест при нажатии)
                         shooting = True
                     if event.type == pygame.MOUSEBUTTONUP:
                         shooting = False
                     if event.type == SHOT_TIMING and shooting:
-                        reg_shells.append([Shells(shells, pos=(player.get_pos()), velocity=10), 0])
+                        Shells(shells, pos=(player.get_pos()), velocity=shells_velocity)
                     if pygame.mouse.get_focused() and cursor_pos:
                         if 0 <= cursor_pos[0] <= 130 and 0 <= cursor_pos[1] <= 70:
                             if event.type == pygame.MOUSEBUTTONDOWN:
                                 stop = True
+                    if event.type == CHANGE_DIFFICULT:
+                        difficult += 1
+                        diff_was_changed = False
             if stop:
                 to_g_menu, running = menu.go_menu(screen)
                 menu.menu_ok, stop = True, False
             else:
+                if difficult == 1:
+                    if len(meteorites) < 1:
+                        Meteor(meteorites, vy=random.randint(1, 2))
+                elif difficult == 2:
+                    if len(meteorites) < 2:
+                        if len(meteorites) < 1:
+                            Meteor(meteorites, vy=random.randint(1, 3))
+                        else:
+                            if random.randint(1, 50) == 2:
+                                Meteor(meteorites, vy=random.randint(1, 3))
+                elif difficult == 3:
+                    if len(meteorites) < 2:
+                        if len(meteorites) < 1:
+                            Meteor(meteorites, vy=random.randint(1, 4))
+                        else:
+                            if random.randint(1, 50) == 2:
+                                Meteor(meteorites, vy=random.randint(1, 4))
+                elif difficult == 4:
+                    if not diff_was_changed:
+                        fire_rate = 200
+                        pygame.time.set_timer(SHOT_TIMING, fire_rate)
+                        diff_was_changed = True
+                        print(11)
+                    if len(meteorites) < 3:
+                        if len(meteorites) < 1:
+                            Meteor(meteorites, vy=random.randint(1, 4))
+                        else:
+                            if random.randint(1, 40) == 2:
+                                Meteor(meteorites, vy=random.randint(1, 4))
+                elif difficult == 5:
+                    if not diff_was_changed:
+                        fire_rate = 160
+                        pygame.time.set_timer(SHOT_TIMING, fire_rate)
+                        diff_was_changed = True
+                        print(11)
+                    if len(meteorites) < 3:
+                        if len(meteorites) < 1:
+                            Meteor(meteorites, vy=random.randint(1, 5))
+                        else:
+                            if random.randint(1, 40) == 2:
+                                Meteor(meteorites, vy=random.randint(1, 5))
+
+                elif difficult >= 6:
+                    if not diff_was_changed:
+                        fire_rate = 160
+                        shells_velocity = 15
+                        pygame.time.set_timer(SHOT_TIMING, fire_rate)
+                        diff_was_changed = True
+                        print(11)
+                    if len(meteorites) < 4:
+                        if len(meteorites) < 1:
+                            Meteor(meteorites, vy=random.randint(1, 5))
+                        else:
+                            if random.randint(1, 40) == 2:
+                                Meteor(meteorites, vy=random.randint(1, 5))
+
                 screen.fill(pygame.Color('Black'))
                 if pygame.mouse.get_focused() and cursor_pos:
                     player.update(cursor_pos[0])
