@@ -22,6 +22,20 @@ clock = pygame.time.Clock()
 g_m = Game_Menu(WIDTH, HEIGHT, FPS)
 
 
+def draw_text(intro_text, x=450):
+    font = pygame.font.Font(None, 50)
+    text_coord = 100
+    for line in intro_text:
+        string_rendered = font.render(line, 1, pygame.Color(0, 255, 0))
+        intro_rect = string_rendered.get_rect()
+        text_coord += 10
+        intro_rect.top = text_coord
+        intro_rect.x = x
+        text_coord += intro_rect.height
+        screen.blit(string_rendered, intro_rect)
+
+
+
 def game():
     SHOT_TIMING = pygame.USEREVENT + 1
     CHANGE_DIFFICULT = pygame.USEREVENT + 2
@@ -88,7 +102,7 @@ def game():
                                 Meteor(meteorites, vy=random.randint(1, 4))
                 elif difficult == 4:
                     if not diff_was_changed:
-                        fire_rate = 200
+                        fire_rate = 2
                         pygame.time.set_timer(SHOT_TIMING, fire_rate)
                         diff_was_changed = True
                         print(11)
@@ -100,7 +114,7 @@ def game():
                                 Meteor(meteorites, vy=random.randint(1, 4))
                 elif difficult == 5:
                     if not diff_was_changed:
-                        fire_rate = 160
+                        fire_rate = 1
                         pygame.time.set_timer(SHOT_TIMING, fire_rate)
                         diff_was_changed = True
                         print(11)
@@ -113,7 +127,7 @@ def game():
 
                 elif difficult >= 6:
                     if not diff_was_changed:
-                        fire_rate = 160
+                        fire_rate = 1
                         shells_velocity = 15
                         pygame.time.set_timer(SHOT_TIMING, fire_rate)
                         diff_was_changed = True
@@ -126,6 +140,165 @@ def game():
                                 Meteor(meteorites, vy=random.randint(1, 5))
 
                 screen.fill(pygame.Color('Black'))
+                if pygame.mouse.get_focused() and cursor_pos:
+                    player.update(cursor_pos[0])
+                player.draw(screen)
+                shells.draw(screen)
+                shells.update(meteorites)
+                meteorites.draw(screen)
+                meteorites.update(shells, meteorites, particles, player)
+                particles.draw(screen)
+                particles.update()
+                player.hearts()
+                menu.draw_but_to_menu(screen)
+                clock.tick(FPS)
+            pygame.display.flip()
+        if to_g_menu == 0 or to_g_menu == 1:
+            for i in meteorites:
+                i.kill()
+            for i in shells:
+                i.kill()
+            for i in particles:
+                i.kill()
+            if to_g_menu == 0:
+                game_menu()
+            else:
+                game()
+        else:
+            pygame.quit()
+
+
+def training():
+    SHOT_TIMING = pygame.USEREVENT + 1
+    TIMER = pygame.USEREVENT + 2
+    text_timer = 1
+    next = False
+    score = 0
+    fire_rate = 200
+    shells_velocity = 10
+    flag = True
+
+    if __name__ == '__main__':
+        screen = pygame.display.set_mode(size)
+        running, shooting, stop = True, False, False
+        cursor_pos = None
+        to_g_menu = 2
+        player = Player()
+        player.player_hp = 1
+        menu = Menu(WIDTH, HEIGHT, FPS)
+        pygame.time.set_timer(SHOT_TIMING, fire_rate)
+        pygame.time.set_timer(TIMER, 5000)
+
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        stop = True
+                if event.type == pygame.QUIT:
+                    running = False
+                if not stop:
+                    if event.type == pygame.MOUSEMOTION:
+                        cursor_pos = event.pos
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        shooting = True
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        shooting = False
+                    if event.type == SHOT_TIMING and shooting:
+                        Shells(shells, pos=(player.get_pos()), velocity=shells_velocity)
+                    if pygame.mouse.get_focused() and cursor_pos:
+                        if 0 <= cursor_pos[0] <= 130 and 0 <= cursor_pos[1] <= 70:
+                            if event.type == pygame.MOUSEBUTTONDOWN:
+                                stop = True
+                    if event.type == TIMER:
+                        text_timer += 1
+            if stop:
+                to_g_menu, running = menu.go_menu(screen)
+                menu.menu_ok, stop = True, False
+            else:
+                screen.fill(pygame.Color('Black'))
+                if text_timer == 1:
+                    intro_text = ["Обучение", "Стрельба и передвижение"]
+                    draw_text(intro_text)
+                elif text_timer == 2:
+                    intro_text = ["Передвижение с помощью мышки", "стрельба при зажатии любой клавиши мыши"]
+                    draw_text(intro_text, x=200)
+                elif text_timer == 3:
+                    intro_text = ["Попробуй сбить метеор"]
+                    draw_text(intro_text)
+                elif text_timer == 4:
+                    if flag:
+                        Meteor(meteorites, vy=1)
+                        flag = False
+                    if len(meteorites) == 1:
+                        pygame.time.set_timer(TIMER, 5000)
+                    elif len(meteorites) == 0:
+                        text_timer = 5
+                elif text_timer == 5:
+                    if player.pl_score != 0:
+                        intro_text = ["Получилось!", "Теперь попробуй справится с 2 метеорами",
+                                      "что бы сбить сразу 2 метеора придется иногда жертвовать",
+                                      "своей целостностью"]
+                        draw_text(intro_text, x=150)
+                        flag = True
+                    elif player.pl_score == 0:
+                        intro_text = ['Ты пропустил метеор,', 'в игре это равносильно поражению,',
+                                      'давай еще раз']
+                        draw_text(intro_text, x=200)
+                elif text_timer == 6:
+                    if player.pl_score > 0 and flag:
+                        player.player_hp = 2
+                        Meteor(meteorites, x=100, vy=4, vx=0)
+                        Meteor(meteorites, x=900, vy=4, vx=0)
+                        flag = False
+                    elif player.pl_score == 0:
+                        text_timer = 4
+                        flag = True
+                    if len(meteorites) > 0:
+                        pygame.time.set_timer(TIMER, 5000)
+                    elif len(meteorites) == 0:
+                        text_timer = 7
+                elif text_timer == 7:
+                    if player.pl_score == 20:
+                        intro_text = ["Получилось!", 'Теперь попробуй грамотно распределять приоритеты']
+                        draw_text(intro_text, x=200)
+                        flag = True
+                    else:
+                        intro_text = ['Пропускать их нельзя, пробуй еще раз']
+                        draw_text(intro_text, x=200)
+                        flag = True
+                elif text_timer == 8:
+                    if player.pl_score < 20:
+                        text_timer = 6
+                        player.pl_score = 10
+                        flag = True
+                    else:
+                        if flag:
+                            Meteor(meteorites, x=600, vy=4, vx=1)
+                            Meteor(meteorites, x=1000, vy=4, vx=-1)
+                            Meteor(meteorites, x=100, vy=3, vx=0)
+                            player.player_hp = 2
+                            flag = False
+                        if len(meteorites) > 0:
+                            pygame.time.set_timer(TIMER, 5000)
+                        elif len(meteorites) == 0:
+                            text_timer = 9
+                elif text_timer == 9:
+                    if player.pl_score == 30:
+                        intro_text = ["Молодец!", 'Теперь ты готов к защите Земли']
+                        draw_text(intro_text, x=300)
+                        flag = True
+                    else:
+                        intro_text = ['Пропускать их нельзя, пробуй еще раз']
+                        draw_text(intro_text, x=200)
+                        flag = True
+                elif text_timer == 10:
+                    if player.pl_score < 30:
+                        text_timer = 8
+                        player.pl_score = 20
+                        flag = True
+                    else:
+                        game_menu()
+
                 if pygame.mouse.get_focused() and cursor_pos:
                     player.update(cursor_pos[0])
                 player.draw(screen)
@@ -184,7 +357,7 @@ def game_menu():
     if game_pos == 0:
         game()
     if game_pos == 1:
-        pass
+        training()
     if game_pos == 2:
         terminate()
 

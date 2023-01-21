@@ -29,6 +29,8 @@ class Shells(pygame.sprite.Sprite):
 
     def update(self, reg_meteors):
         self.rect.y -= self.vy
+        if self.rect.y < 0:
+            self.kill()
 
     def terminate(self):
         self.kill()
