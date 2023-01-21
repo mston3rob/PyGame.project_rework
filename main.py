@@ -35,7 +35,6 @@ def draw_text(intro_text, x=450):
         screen.blit(string_rendered, intro_rect)
 
 
-
 def game():
     SHOT_TIMING = pygame.USEREVENT + 1
     CHANGE_DIFFICULT = pygame.USEREVENT + 2
@@ -48,6 +47,10 @@ def game():
 
     if __name__ == '__main__':
         screen = pygame.display.set_mode(size)
+        for i in range(1000):
+            screen.fill(pygame.Color('white'),
+                        (random.random() * WIDTH,
+                         random.random() * HEIGHT, 1, 1))
         running, shooting, stop = True, False, False
         cursor_pos = None
         to_g_menu = 2
@@ -102,7 +105,7 @@ def game():
                                 Meteor(meteorites, vy=random.randint(1, 4))
                 elif difficult == 4:
                     if not diff_was_changed:
-                        fire_rate = 2
+                        fire_rate = 180
                         pygame.time.set_timer(SHOT_TIMING, fire_rate)
                         diff_was_changed = True
                         print(11)
@@ -114,7 +117,7 @@ def game():
                                 Meteor(meteorites, vy=random.randint(1, 4))
                 elif difficult == 5:
                     if not diff_was_changed:
-                        fire_rate = 1
+                        fire_rate = 160
                         pygame.time.set_timer(SHOT_TIMING, fire_rate)
                         diff_was_changed = True
                         print(11)
@@ -127,7 +130,7 @@ def game():
 
                 elif difficult >= 6:
                     if not diff_was_changed:
-                        fire_rate = 1
+                        fire_rate = 150
                         shells_velocity = 15
                         pygame.time.set_timer(SHOT_TIMING, fire_rate)
                         diff_was_changed = True
@@ -138,10 +141,9 @@ def game():
                         else:
                             if random.randint(1, 40) == 2:
                                 Meteor(meteorites, vy=random.randint(1, 5))
-
-                screen.fill(pygame.Color('Black'))
                 if pygame.mouse.get_focused() and cursor_pos:
                     player.update(cursor_pos[0])
+                screen.fill(pygame.color.Color('black'))
                 player.draw(screen)
                 shells.draw(screen)
                 shells.update(meteorites)
@@ -152,6 +154,7 @@ def game():
                 player.hearts()
                 menu.draw_but_to_menu(screen)
                 clock.tick(FPS)
+
             pygame.display.flip()
         if to_g_menu == 0 or to_g_menu == 1:
             for i in meteorites:
@@ -322,7 +325,7 @@ def training():
             if to_g_menu == 0:
                 game_menu()
             else:
-                game()
+                training()
         else:
             pygame.quit()
 
