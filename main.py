@@ -37,9 +37,68 @@ def draw_text(intro_text, x=450):
         screen.blit(string_rendered, intro_rect)
 
 
+def death_screen():
+    SHOT_TIMING = pygame.USEREVENT + 1
+    TIMER = pygame.USEREVENT + 2
+    text_timer = 1
+    next = False
+    score = 0
+    fire_rate = 200
+    shells_velocity = 10
+    flag = True
+
+    if __name__ == '__main__':
+        screen = pygame.display.set_mode(size)
+        running, shooting, stop = True, False, False
+        cursor_pos = None
+        to_g_menu = 2
+        menu = Menu(WIDTH, HEIGHT, FPS)
+        pygame.time.set_timer(SHOT_TIMING, fire_rate)
+        pygame.time.set_timer(TIMER, 5000)
+
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        stop = True
+                if event.type == pygame.QUIT:
+                    running = False
+                if not stop:
+                    if event.type == pygame.MOUSEMOTION:
+                        cursor_pos = event.pos
+                if pygame.mouse.get_focused() and cursor_pos:
+                    if 0 <= cursor_pos[0] <= 130 and 0 <= cursor_pos[1] <= 70:
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            stop = True
+            if stop:
+                to_g_menu, running = menu.go_menu(screen)
+                menu.menu_ok, stop = True, False
+            else:
+                screen.fill(pygame.Color('Black'))
+                intro_text = ["ВЫ ПРОИГРАЛИ!"]
+                draw_text(intro_text)
+                menu.draw_but_to_menu(screen)
+                clock.tick(FPS)
+            pygame.display.flip()
+        if to_g_menu == 0 or to_g_menu == 1:
+            for i in meteorites:
+                i.kill()
+            for i in shells:
+                i.kill()
+            for i in particles:
+                i.kill()
+            if to_g_menu == 0:
+                game_menu()
+            else:
+                training()
+        else:
+            pygame.quit()
+
+
 def game():
     SHOT_TIMING = pygame.USEREVENT + 1
     CHANGE_DIFFICULT = pygame.USEREVENT + 2
+    HP = pygame.USEREVENT + 3
     difficult = 1
     diff_was_changed = False
     fire_rate = 200
@@ -84,6 +143,9 @@ def game():
                     if event.type == CHANGE_DIFFICULT:
                         difficult += 1
                         diff_was_changed = False
+                    if event.type == HP:
+                        if player.player_hp < 3:
+                            player.player_hp += 1
             if stop:
                 to_g_menu, running = menu.go_menu(screen)
                 menu.menu_ok, stop = True, False
