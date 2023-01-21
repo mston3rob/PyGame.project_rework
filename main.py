@@ -8,6 +8,7 @@ from player import Player
 from menu import Menu
 from game_menu import Game_Menu
 
+
 # инициалитзация pygame для работы со спрайтами и загрузкой изображения
 pygame.init()
 size = WIDTH, HEIGHT = 1200, 840
@@ -20,6 +21,7 @@ shells = pygame.sprite.Group()
 FPS = 60
 clock = pygame.time.Clock()
 g_m = Game_Menu(WIDTH, HEIGHT, FPS)
+TRAINING = False
 
 
 def draw_text(intro_text, x=450):
@@ -54,7 +56,7 @@ def game():
         running, shooting, stop = True, False, False
         cursor_pos = None
         to_g_menu = 2
-        player = Player()
+        player = Player(TRAINING)
         menu = Menu(WIDTH, HEIGHT, FPS)
         pygame.time.set_timer(CHANGE_DIFFICULT, 20000)
         pygame.time.set_timer(SHOT_TIMING, fire_rate)
@@ -153,6 +155,7 @@ def game():
                 particles.update()
                 player.hearts()
                 menu.draw_but_to_menu(screen)
+                player.score(screen)
                 clock.tick(FPS)
 
             pygame.display.flip()
@@ -180,13 +183,14 @@ def training():
     fire_rate = 200
     shells_velocity = 10
     flag = True
+    TRAINING = True
 
     if __name__ == '__main__':
         screen = pygame.display.set_mode(size)
         running, shooting, stop = True, False, False
         cursor_pos = None
         to_g_menu = 2
-        player = Player()
+        player = Player(TRAINING)
         player.player_hp = 1
         menu = Menu(WIDTH, HEIGHT, FPS)
         pygame.time.set_timer(SHOT_TIMING, fire_rate)

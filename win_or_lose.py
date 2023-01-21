@@ -4,16 +4,8 @@ import sqlite3
 
 class Player_End:
     def __init__(self):
-        self.con = sqlite3.connect('DataBase_to_scores')
+        self.con = sqlite3.connect('DataBase_to_scores.sqlite')
         self.create_bd()
-
-    def new_score(self, score):
-        cur = self.con.cursor()
-        time = dt.time()
-        cur.execute(f"""INSERT INTO RECORDS(time, score)
-        VALUES({time}, {score})""")
-        self.con.commit()
-        cur.close()
 
     def create_bd(self):
         cur = self.con.cursor()
@@ -21,6 +13,15 @@ class Player_End:
         time text,
         score integer
         )""")
+        self.con.commit()
+        cur.close()
+
+    def new_score(self, score):
+        self.con = sqlite3.connect('DataBase_to_scores.sqlite')
+        cur = self.con.cursor()
+        time = dt.datetime.now()
+        cur.execute("""INSERT INTO RECORDS(time, score) 
+                       VALUES (?,?);""", (time, score))
         self.con.commit()
         cur.close()
 

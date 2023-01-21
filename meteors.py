@@ -126,6 +126,7 @@ class Meteor(pygame.sprite.Sprite):
                     create_particles(particles, (self.rect.x, self.rect.y), self.vx, self.vy)
                     self.kill()
                     player.hurt()
-
-        if self.rect.y > 1000:
+        if self.rect.y > 900:
+            if not(player.die):
+                player.hurt(die=True)
             self.kill()
