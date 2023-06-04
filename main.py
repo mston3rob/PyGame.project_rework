@@ -8,7 +8,7 @@ from player import Player
 from menu import Menu
 from game_menu import Game_Menu
 
-
+#
 # инициалитзация pygame для работы со спрайтами и загрузкой изображения
 pygame.init()
 size = WIDTH, HEIGHT = 1200, 840
@@ -37,7 +37,7 @@ def draw_text(intro_text, x=450):
         screen.blit(string_rendered, intro_rect)
 
 
-def death_screen():
+def death_screen(to_game=True):
     SHOT_TIMING = pygame.USEREVENT + 1
     TIMER = pygame.USEREVENT + 2
     text_timer = 1
@@ -51,7 +51,7 @@ def death_screen():
         screen = pygame.display.set_mode(size)
         running, shooting, stop = True, False, False
         cursor_pos = None
-        to_g_menu = 2
+        to_g_menu = 1
         menu = Menu(WIDTH, HEIGHT, FPS)
         pygame.time.set_timer(SHOT_TIMING, fire_rate)
         pygame.time.set_timer(TIMER, 5000)
@@ -90,7 +90,10 @@ def death_screen():
             if to_g_menu == 0:
                 game_menu()
             else:
-                training()
+                if to_game:
+                    game()
+                else:
+                    training()
         else:
             pygame.quit()
 
@@ -119,8 +122,11 @@ def game():
         menu = Menu(WIDTH, HEIGHT, FPS)
         pygame.time.set_timer(CHANGE_DIFFICULT, 20000)
         pygame.time.set_timer(SHOT_TIMING, fire_rate)
+        pygame.time.set_timer(HP, 10000)
 
         while running:
+            if player.player_hp == 0:
+                death_screen()
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
@@ -327,25 +333,25 @@ def training():
                     elif len(meteorites) == 0:
                         text_timer = 7
                 elif text_timer == 7:
-                    if player.pl_score == 20:
+                    if player.pl_score == 20 and player.player_hp == 1:
                         intro_text = ["Получилось!", 'Теперь попробуй грамотно распределять приоритеты']
                         draw_text(intro_text, x=200)
                         flag = True
                     else:
-                        intro_text = ['Пропускать их нельзя, пробуй еще раз']
+                        intro_text = ['Пропускать их и разбиваться нельзя, пробуй еще раз']
                         draw_text(intro_text, x=200)
                         flag = True
+                        player.pl_score = 10
                 elif text_timer == 8:
                     if player.pl_score < 20:
                         text_timer = 6
-                        player.pl_score = 10
                         flag = True
                     else:
                         if flag:
                             Meteor(meteorites, x=600, vy=4, vx=1)
                             Meteor(meteorites, x=1000, vy=4, vx=-1)
                             Meteor(meteorites, x=100, vy=3, vx=0)
-                            player.player_hp = 2
+                            player.player_hp = 1
                             flag = False
                         if len(meteorites) > 0:
                             pygame.time.set_timer(TIMER, 5000)
@@ -357,7 +363,7 @@ def training():
                         draw_text(intro_text, x=300)
                         flag = True
                     else:
-                        intro_text = ['Пропускать их нельзя, пробуй еще раз']
+                        intro_text = ['Пропускать их и разбиваться нельзя, пробуй еще раз']
                         draw_text(intro_text, x=200)
                         flag = True
                 elif text_timer == 10:
